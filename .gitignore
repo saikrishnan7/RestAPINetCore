@@ -5,3 +5,6 @@
 /Library/.vs/Library/v16
 /Library/src/Library.API/obj/Debug/netcoreapp2.0
 /Library/src/Library.API/obj
+/Library/src/Library.API/bin/Debug/netcoreapp2.0/Properties
+/Library/src/Library.API/bin/Debug/netcoreapp2.0
+/Library/.vs/Library/config
