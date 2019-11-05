@@ -8,3 +8,7 @@
 /Library/src/Library.API/bin/Debug/netcoreapp2.0/Properties
 /Library/src/Library.API/bin/Debug/netcoreapp2.0
 /Library/.vs/Library/config
+/Library/obj/Docker
+/Library/obj/Debug
+/Library/bin/Debug
+/Library/.vs/Library/DesignTimeBuild

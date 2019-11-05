@@ -1,9 +1,9 @@
-﻿namespace Library.API.Models
-{
-    public class BookForCreationDto
-    {
-        public string Title { get; set; }
+﻿using System.ComponentModel.DataAnnotations;
 
-        public string Description { get; set; }
+namespace Library.API.Models
+{
+    public class BookForCreationDto : BookForManipulationDto
+    {
+        
     }
 }
