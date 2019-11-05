@@ -33,6 +33,7 @@ namespace Library.API
                 {
                     setupAction.ReturnHttpNotAcceptable = true;
                     setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                    setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
                 });
 
             // register the DbContext on the container, getting the connection string from
@@ -77,6 +78,10 @@ namespace Library.API
                         opt => opt.MapFrom(src =>
                             src.DateOfBirth.GetCurrentAge()));
                 cfg.CreateMap<Entities.Book, Models.BookDto>();
+                cfg.CreateMap<Models.AuthorForCreationDto, Entities.Author>();
+                cfg.CreateMap<Models.BookForCreationDto, Entities.Book>();
+                cfg.CreateMap<Models.BookForUpdateDto, Entities.Book>();
+                cfg.CreateMap<Entities.Book, Models.BookForUpdateDto>();
             });
             libraryContext.EnsureSeedDataForContext();
 
