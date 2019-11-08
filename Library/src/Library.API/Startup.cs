@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +13,7 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Serialization;
 
 namespace Library.API
 {
@@ -36,8 +33,15 @@ namespace Library.API
             services.AddMvc(setupAction =>
                 {
                     setupAction.ReturnHttpNotAcceptable = true;
-                    setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
-                    setupAction.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+                    setupAction.OutputFormatters.Add(
+                        new XmlDataContractSerializerOutputFormatter());
+                    setupAction.InputFormatters.Add(
+                        new XmlDataContractSerializerInputFormatter());
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver =
+                        new CamelCasePropertyNamesContractResolver();
                 });
 
             // register the DbContext on the container, getting the connection string from
@@ -57,6 +61,12 @@ namespace Library.API
                     .GetService<IActionContextAccessor>().ActionContext;
                 return new UrlHelper(actionContext);
             });
+
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,18 +103,18 @@ namespace Library.API
 
             AutoMapper.Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Entities.Author, Models.AuthorDto>()
+                cfg.CreateMap<Author, Models.AuthorDto>()
                     .ForMember(dest => dest.Name,
                         opt => opt.MapFrom(src =>
                             $"{src.FirstName} {src.LastName}"))
                     .ForMember(dest => dest.Age, 
                         opt => opt.MapFrom(src =>
                             src.DateOfBirth.GetCurrentAge()));
-                cfg.CreateMap<Entities.Book, Models.BookDto>();
-                cfg.CreateMap<Models.AuthorForCreationDto, Entities.Author>();
-                cfg.CreateMap<Models.BookForCreationDto, Entities.Book>();
-                cfg.CreateMap<Models.BookForUpdateDto, Entities.Book>();
-                cfg.CreateMap<Entities.Book, Models.BookForUpdateDto>();
+                cfg.CreateMap<Book, Models.BookDto>();
+                cfg.CreateMap<Models.AuthorForCreationDto, Author>();
+                cfg.CreateMap<Models.BookForCreationDto, Book>();
+                cfg.CreateMap<Models.BookForUpdateDto, Book>();
+                cfg.CreateMap<Book, Models.BookForUpdateDto>();
             });
             libraryContext.EnsureSeedDataForContext();
 
